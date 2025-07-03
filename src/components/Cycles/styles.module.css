@@ -19,7 +19,7 @@
 }
 
 .workTime {
-	background-color: var(--warning);
+	background-color: var(--error);
 }
 
 .shortBreakTime {
