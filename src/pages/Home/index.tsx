@@ -2,16 +2,8 @@ import { Container } from "../../components/Container";
 import { CountDown } from "../../components/CountDown";
 import { MainForm } from "../../components/MainForm";
 import { MainTemplate } from "../../components/templates/MainTemplate";
-import type { TaskStateModel } from "../../models/TaskStateModel";
 
-type HomeProps = {
-  state: TaskStateModel;
-  setState: React.Dispatch<React.SetStateAction<TaskStateModel>>;
-};
-
-export function Home(props: HomeProps) {
-  console.log("props", props);
-
+export function Home() {
   return (
     <MainTemplate>
       <Container>
