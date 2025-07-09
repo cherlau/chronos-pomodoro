@@ -1,4 +1,4 @@
-import { PlayCircleIcon } from "lucide-react";
+import { PlayCircleIcon, StopCircleIcon } from "lucide-react";
 import { Cycles } from "../Cycles";
 import { DefaultButton } from "../DefaultButton";
 import { DefaultInput } from "../DefaultInput";
@@ -46,9 +46,26 @@ export function MainForm() {
         activeTask: newTask,
         // aqui estou pegando o estado anterior de getNextCycle, só depois de executar a função setState() que ele vai ser refletido
         currentCycle: nextCycle,
-        secondsRemaining, //// TO-DO: conferir dps
-        formattedSecondRemaining: formatSecondsToMinutes(secondsRemaining), //// TO-DO: conferir dps
+        secondsRemaining,
+        formattedSecondRemaining: formatSecondsToMinutes(secondsRemaining),
         tasks: [...prevState.tasks, newTask],
+      };
+    });
+  }
+
+  function handleInterruptTask() {
+    setState((prevState) => {
+      return {
+        ...prevState,
+        activeTask: null,
+        secondsRemaining: 0,
+        formattedSecondRemaining: "00:00",
+        tasks: prevState.tasks.map((task) => {
+          if (prevState.activeTask?.id === task.id) {
+            return { ...task, interruptDate: Date.now() };
+          }
+          return task;
+        }),
       };
     });
   }
@@ -62,11 +79,12 @@ export function MainForm() {
           type="text"
           placeholder="Digite..."
           ref={taskNameInput}
+          disabled={!!state.activeTask}
         />
       </div>
 
       <div className="formRow">
-        <p>Lorem ipsum dolor sit amet.</p>
+        <p>Próximo intervalo é de X min</p>
       </div>
 
       {state.currentCycle > 0 && (
@@ -76,7 +94,25 @@ export function MainForm() {
       )}
 
       <div className="formRow">
-        <DefaultButton icon={<PlayCircleIcon />} color="green" />
+        {!state.activeTask && (
+          <DefaultButton
+            type="submit"
+            aria-label="Para tarefa"
+            title="Iniciar nova tarefa"
+            color="green"
+            icon={<PlayCircleIcon />}
+          />
+        )}
+        {!!state.activeTask && (
+          <DefaultButton
+            type="button"
+            title="Interromper tarefa"
+            aria-label="Interromper tarefa"
+            color="red"
+            icon={<StopCircleIcon />}
+            onClick={handleInterruptTask}
+          />
+        )}
       </div>
     </form>
   );
